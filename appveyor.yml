@@ -1,0 +1,30 @@
+
+install:
+- git submodule update --init
+- pip install --user --upgrade pip
+- pip install --user plumbum
+
+build_script:
+- python -u appveyor.py
+
+after_build:
+- ps: mv OpenBLASConfig.cmake opt/
+- ps: |
+    7z a -ttar windows.tar -r ./opt/*
+    7z a -tgzip windows.tar.gz windows.tar
+
+artifacts:
+- path: windows.tar.gz
+  type: file
+  name: windows
+
+deploy:
+  artifact: windows
+  provider: GitHub
+  force_update: true
+  auth_token:
+    secure: "Y++PtSRXu01voBJGR4DhuvMfZfjZIdpkR+Vzi2ITwBqdL7+M8VXcCAmzH9pjT6Ef"
+  draft: false
+  prerelease: false
+  on:
+    appveyor_repo_tag: true

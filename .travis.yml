@@ -1,0 +1,69 @@
+language: c
+sudo: false
+
+dist: trusty
+
+env:
+  global:
+    - secure: UgBtr5uPUkqzypwlAAOmkvy6GLb/oH4XhVbxJGKB+koHrLWMWR1Ayyeh8PAKqbev250Q+KhZJUgcqZm1jvoeSlJnD0Gt9FlHF9IEJ8FEPXCwKTEyD7+Pe+xfUcC6f3cQtdQa7wSBvnFQiMPYodOn3ws5peIDDITsjeK54mFMA7EVdDC4k48BQ8hXFT6P5PPrdhM/Hv47XKEnOXL2y11JUVNaOIm1jXTxkdF0OXPmSQkBoLVdo8d/O6N27Vjjbgn0++NoKmE2Lfz4xPvlsVJj07fBrpGcdGFLx4Kf1O38o25PP+HO3/ZIClDjKwM6gnqjZWLZpkuBGVdkr9WM2sdQhy+7yJDyMNN2SDnVxr/O+i02IG2g6SdveN2Tttsah5vERT7mxXtpsDsH9ez/pOLfExJiekPSGuqHZWLQLKJ2g+1QCYv5edg6Ssh8AD29T95U/ye0WB8kPYmMdAnOkhri2mz+7lDo45Ierai1tMTNfQ78kJwDDEWJAUVugs9uzFmkp47ApKEEPwjIeH+nBGxs+XnsqObF/dg8T0ndBNLTkzBpQ+sbogjPtlu14iKd5mOLWTIIatIH9PJnKMROkVNCc9o1CPm1Hh+H9KmtVpLHiJPOhdazeL+yWspVMBn1CEcHvBhvoPqri8wQ/tCSqFlpuf9+xUhHjdJLFuWJfJWhQI4=
+
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode7.3
+      install:
+        - pip install --user --upgrade pip
+        - pip install --user plumbum
+
+    - os: linux
+      addons:
+        apt:
+          sources: [kubuntu-backports, ubuntu-toolchain-r-test]
+          packages: [gcc-5, gcc-multilib]
+      install:
+        - pip install --user --upgrade pip
+        - pip install --user plumbum
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/Library/Caches/pip
+
+before_script:
+  - |
+    if   [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      export deployname=darwin
+
+    elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      export deployname=linux
+
+    fi
+
+script:
+  - python ./travis.py
+  - mv OpenBLASConfig.cmake opt/
+  - tar -C opt -cvf "${deployname}.tar.gz" .
+
+notifications:
+  email: false
+
+deploy:
+  - provider: releases
+    api_key: ${API_KEY}
+    file: "linux.tar.gz"
+    skip_cleanup: true
+    overwrite: true
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = "linux"
+      all_branches: true
+
+  - provider: releases
+    api_key: ${API_KEY}
+    file: "darwin.tar.gz"
+    skip_cleanup: true
+    overwrite: true
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = "osx"
+      all_branches: true
