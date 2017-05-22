@@ -34,7 +34,7 @@ else ()
 endif ()
 
 get_filename_component (blasbase
-    "${CMAKE_CURRENT_LIST_DIR}/${platform}/${toolchain}/${cpu}/${arch}" ABSOLUTE
+    "${CMAKE_CURRENT_LIST_DIR}/${platform}/${toolchain}/${microarch}/${arch}" ABSOLUTE
 )
 set_target_properties (${pkgname} PROPERTIES
     IMPORTED_IMPLIB               "${blasbase}/lib/libopenblas.${libext}.a"
