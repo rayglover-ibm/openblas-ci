@@ -9,7 +9,7 @@ mingw64 = 'C:/mingw-w64/x86_64-6.3.0-posix-seh-rt_v5-rev1/mingw64/bin'
 Job = namedtuple("Job", "TOOLCHAIN TARGET ARCH INTERFACE64 BINARY")
 
 jobs = [
-    Job(TOOLCHAIN='mingw', TARGET='NEHALEM', ARCH='x86-64', INTERFACE64='0', BINARY='64'),
+    Job(TOOLCHAIN='mingw', TARGET='NEHALEM', ARCH='x86-64', INTERFACE64='1', BINARY='64'),
     Job(TOOLCHAIN='mingw', TARGET='NEHALEM', ARCH='x86',    INTERFACE64='0', BINARY='32')
 ]
 
@@ -19,7 +19,7 @@ with local.cwd(local.cwd / 'OpenBLAS'):
             make = local.get('make')
 
             make['TARGET={0}'.format(job.TARGET),
-                'NUM_THREADS=1', 'NO_LAPACK=1', 'NO_LAPACKE=1', 'ONLY_CBLAS=1',
+                'USE_THREAD=0', 'NO_LAPACK=1', 'NO_LAPACKE=1', 'ONLY_CBLAS=1',
                 'INTERFACE64={0}'.format(job.INTERFACE64),
                 'BINARY={0}'.format(job.BINARY)] & FG
 
