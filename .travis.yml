@@ -48,21 +48,29 @@ notifications:
   email: false
 
 deploy:
-  provider: releases
-  api_key: ${API_KEY}
-  skip_cleanup: true
-  overwrite: true
   - file: "linux.tar.gz"
+    provider: releases
+    api_key: ${API_KEY}
+    skip_cleanup: true
+    overwrite: true
     on:
       tags: true
       condition: $TRAVIS_OS_NAME = "linux"
 
   - file: "darwin.tar.gz"
+    provider: releases
+    api_key: ${API_KEY}
+    skip_cleanup: true
+    overwrite: true
     on:
       tags: true
       condition: $TRAVIS_OS_NAME = "osx"
 
   - file: "linux.tar.gz"
+    provider: releases
+    api_key: ${API_KEY}
+    skip_cleanup: true
+    overwrite: true
     prerelease: true
     name: latest
     on:
@@ -70,6 +78,10 @@ deploy:
       condition: $TRAVIS_OS_NAME = "linux"
 
   - file: "darwin.tar.gz"
+    provider: releases
+    api_key: ${API_KEY}
+    skip_cleanup: true
+    overwrite: true
     prerelease: true
     name: latest
     on:
