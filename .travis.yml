@@ -67,23 +67,25 @@ deploy:
       condition: $TRAVIS_OS_NAME = "osx"
 
   - file: "linux.tar.gz"
+    name: latest
+    tag_name: latest
     provider: releases
     api_key: ${API_KEY}
     skip_cleanup: true
     overwrite: true
     prerelease: true
-    name: latest
     on:
       tags: false
       condition: $TRAVIS_OS_NAME = "linux"
 
   - file: "darwin.tar.gz"
+    name: latest
+    tag_name: latest
     provider: releases
     api_key: ${API_KEY}
     skip_cleanup: true
     overwrite: true
     prerelease: true
-    name: latest
     on:
       tags: true
       condition: $TRAVIS_OS_NAME = "osx"
