@@ -28,3 +28,16 @@ deploy:
   prerelease: false
   on:
     appveyor_repo_tag: true
+
+deploy:
+  artifact: windows
+  provider: GitHub
+  release: latest
+  force_update: true
+  auth_token:
+    secure: "31lCn0ra+kS6jDupOSkXxiGpzZ1slUrJ2IUiyBuwzBkJ1aX9GdpEu3ycmdyCRJ09"
+  draft: false
+  prerelease: true
+  on:
+    branch: master
+    appveyor_repo_tag: false
