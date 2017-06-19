@@ -19,17 +19,17 @@ artifacts:
   name: windows
 
 deploy:
+- prerelease: false
   artifact: windows
   provider: GitHub
   force_update: true
   auth_token:
     secure: "31lCn0ra+kS6jDupOSkXxiGpzZ1slUrJ2IUiyBuwzBkJ1aX9GdpEu3ycmdyCRJ09"
   draft: false
-  prerelease: false
   on:
     appveyor_repo_tag: true
 
-deploy:
+- prerelease: true
   artifact: windows
   provider: GitHub
   release: latest
@@ -37,7 +37,6 @@ deploy:
   auth_token:
     secure: "31lCn0ra+kS6jDupOSkXxiGpzZ1slUrJ2IUiyBuwzBkJ1aX9GdpEu3ycmdyCRJ09"
   draft: false
-  prerelease: true
   on:
     branch: master
     appveyor_repo_tag: false
