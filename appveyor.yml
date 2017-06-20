@@ -23,7 +23,7 @@ artifacts:
 
 deploy:
 - artifact: windows
-  release: $(git --git-dir=./OpenBLAS/.git describe)+sha.$(git rev-parse --short HEAD)
+  release: "$(git --git-dir=./OpenBLAS/.git describe)+sha.$(git rev-parse --short HEAD)"
   provider: GitHub
   force_update: true
   auth_token:
