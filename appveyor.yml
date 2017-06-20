@@ -1,3 +1,6 @@
+branches:
+  except:
+    - /^v?([0-9.]+)+[^.]\+sha\.[0-9a-f]{5,40}$/
 
 install:
 - git submodule update --init
@@ -8,7 +11,6 @@ build_script:
 - python -u appveyor.py
 
 after_build:
-- ps: $env:release_name="$(git --git-dir=./OpenBLAS/.git describe)-$(git rev-parse --short HEAD)"
 - ps: mv OpenBLASConfig.cmake opt/
 - ps: |
     7z a -ttar windows.tar -r ./opt/*
@@ -21,7 +23,7 @@ artifacts:
 
 deploy:
 - artifact: windows
-  release: $(release_name)
+  release: $(git --git-dir=./OpenBLAS/.git describe)+sha.$(git rev-parse --short HEAD)
   provider: GitHub
   force_update: true
   auth_token:

@@ -7,6 +7,10 @@ env:
   global:
     - secure: UgBtr5uPUkqzypwlAAOmkvy6GLb/oH4XhVbxJGKB+koHrLWMWR1Ayyeh8PAKqbev250Q+KhZJUgcqZm1jvoeSlJnD0Gt9FlHF9IEJ8FEPXCwKTEyD7+Pe+xfUcC6f3cQtdQa7wSBvnFQiMPYodOn3ws5peIDDITsjeK54mFMA7EVdDC4k48BQ8hXFT6P5PPrdhM/Hv47XKEnOXL2y11JUVNaOIm1jXTxkdF0OXPmSQkBoLVdo8d/O6N27Vjjbgn0++NoKmE2Lfz4xPvlsVJj07fBrpGcdGFLx4Kf1O38o25PP+HO3/ZIClDjKwM6gnqjZWLZpkuBGVdkr9WM2sdQhy+7yJDyMNN2SDnVxr/O+i02IG2g6SdveN2Tttsah5vERT7mxXtpsDsH9ez/pOLfExJiekPSGuqHZWLQLKJ2g+1QCYv5edg6Ssh8AD29T95U/ye0WB8kPYmMdAnOkhri2mz+7lDo45Ierai1tMTNfQ78kJwDDEWJAUVugs9uzFmkp47ApKEEPwjIeH+nBGxs+XnsqObF/dg8T0ndBNLTkzBpQ+sbogjPtlu14iKd5mOLWTIIatIH9PJnKMROkVNCc9o1CPm1Hh+H9KmtVpLHiJPOhdazeL+yWspVMBn1CEcHvBhvoPqri8wQ/tCSqFlpuf9+xUhHjdJLFuWJfJWhQI4=
 
+branches:
+  except:
+    - /^v?([0-9.]+)+[^.]\+sha\.[0-9a-f]{5,40}$/
+
 matrix:
   include:
     - os: osx
@@ -30,14 +34,13 @@ cache:
     - $HOME/Library/Caches/pip
 
 before_script:
-  - export TRAVIS_TAG="`git --git-dir=./OpenBLAS/.git describe`-`git rev-parse --short HEAD`"
+  - export TRAVIS_TAG="`git --git-dir=./OpenBLAS/.git describe`+sha.`git rev-parse --short HEAD`"
   - |
     if   [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       export deployname=darwin
 
     elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       export deployname=linux
-
     fi
 
 script:
