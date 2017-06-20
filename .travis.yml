@@ -50,13 +50,13 @@ notifications:
 
 deploy:
   - file: "linux.tar.gz"
-    name: ${release_name}
+    name: ${TRAVIS_TAG}
     provider: releases
     api_key: ${TRAVIS_TAG}
     skip_cleanup: true
     overwrite: true
     on:
-      tags: false
+      tags: true
       condition: $TRAVIS_OS_NAME = "linux"
 
   - file: "darwin.tar.gz"
@@ -66,5 +66,5 @@ deploy:
     skip_cleanup: true
     overwrite: true
     on:
-      tags: false
+      tags: true
       condition: $TRAVIS_OS_NAME = "osx"
