@@ -30,6 +30,7 @@ cache:
     - $HOME/Library/Caches/pip
 
 before_script:
+  - export TRAVIS_TAG="`git --git-dir=./OpenBLAS/.git describe`-`git rev-parse --short HEAD`"
   - |
     if   [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       export deployname=darwin
@@ -49,43 +50,21 @@ notifications:
 
 deploy:
   - file: "linux.tar.gz"
+    name: ${release_name}
     provider: releases
-    api_key: ${API_KEY}
+    api_key: ${TRAVIS_TAG}
     skip_cleanup: true
     overwrite: true
-    on:
-      tags: true
-      condition: $TRAVIS_OS_NAME = "linux"
-
-  - file: "darwin.tar.gz"
-    provider: releases
-    api_key: ${API_KEY}
-    skip_cleanup: true
-    overwrite: true
-    on:
-      tags: true
-      condition: $TRAVIS_OS_NAME = "osx"
-
-  - file: "linux.tar.gz"
-    name: latest
-    tag_name: latest
-    provider: releases
-    api_key: ${API_KEY}
-    skip_cleanup: true
-    overwrite: true
-    prerelease: true
     on:
       tags: false
       condition: $TRAVIS_OS_NAME = "linux"
 
   - file: "darwin.tar.gz"
-    name: latest
-    tag_name: latest
+    name: ${TRAVIS_TAG}
     provider: releases
     api_key: ${API_KEY}
     skip_cleanup: true
     overwrite: true
-    prerelease: true
     on:
-      tags: true
+      tags: false
       condition: $TRAVIS_OS_NAME = "osx"

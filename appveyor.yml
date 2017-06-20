@@ -8,6 +8,7 @@ build_script:
 - python -u appveyor.py
 
 after_build:
+- ps: $env:release_name="$(git --git-dir=./OpenBLAS/.git describe)-$(git rev-parse --short HEAD)"
 - ps: mv OpenBLASConfig.cmake opt/
 - ps: |
     7z a -ttar windows.tar -r ./opt/*
@@ -19,24 +20,10 @@ artifacts:
   name: windows
 
 deploy:
-- prerelease: false
-  artifact: windows
+- artifact: windows
+  release: $(release_name)
   provider: GitHub
   force_update: true
   auth_token:
-    secure: "31lCn0ra+kS6jDupOSkXxiGpzZ1slUrJ2IUiyBuwzBkJ1aX9GdpEu3ycmdyCRJ09"
-  draft: false
-  on:
-    appveyor_repo_tag: true
-
-- prerelease: true
-  artifact: windows
-  provider: GitHub
-  release: latest
-  force_update: true
-  auth_token:
-    secure: "31lCn0ra+kS6jDupOSkXxiGpzZ1slUrJ2IUiyBuwzBkJ1aX9GdpEu3ycmdyCRJ09"
-  draft: false
-  on:
     branch: master
-    appveyor_repo_tag: false
+    secure: "31lCn0ra+kS6jDupOSkXxiGpzZ1slUrJ2IUiyBuwzBkJ1aX9GdpEu3ycmdyCRJ09"
