@@ -7,11 +7,11 @@ _A collection of OpenBlas builds. See [releases](https://github.com/rayglover-ib
 
 ## Structure
 
-Each release is split in to specific target platforms (Win/Mac/Linux/etc.), and within each release there are a number of builds corresponding to different toolchains, build configurations and CPU architectures.
+Each release is split in to specific target platforms (Win/Mac/Linux/etc.), and within each release there are a number of builds corresponding to different toolchains, build configurations and CPU architecture/microarchitecture.
 
 ## CMake support
 
-This repository contains `OpenBLASBootstrap.cmake` which provides functions for the discovery, downloading and setup of OpenBLAS in to your CMake project. For example, the following finds the latest available build for the current OS and makes the OpenBLAS target available to your project:
+This repository contains `OpenBLASBootstrap.cmake` which provides functions for the discovery, downloading and setup of OpenBLAS in to your CMake project. For example, the following finds the latest available release for the current OS and makes the `OpenBLAS` target available to your project:
 
 ```cmake
 include ("OpenBLASBootstrap")
@@ -28,7 +28,7 @@ target_include_directories (myapp PUBLIC
 )
 ```
 
-To make sure you always use an up to date bootstrap, you could use CMake to download it at configuration time. A full working example of this is available [here](https://github.com/rayglover-ibm/sparse-solvers/blob/211bec856659b0ab68352e0eb27c71f8f8aff364/cmake/BlasUtils.cmake)
+To make sure you always use an up to date bootstrap, you could use CMake to download it at configuration time. A full working example of this is available [here](https://github.com/rayglover-ibm/sparse-solvers/blob/211bec856659b0ab68352e0eb27c71f8f8aff364/cmake/BlasUtils.cmake). Alternatively, you could include this repository as a git submodule in the repository containing yout project.
 
 ## Bazel support
 
