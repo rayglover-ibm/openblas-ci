@@ -3,7 +3,9 @@ cmake_minimum_required (VERSION 2.8)
 set (pkgname "OpenBLAS")
 add_library (${pkgname} SHARED IMPORTED GLOBAL)
 
-set (microarch "NEHALEM")
+# options ---------------------------------------------------------------------
+set ("OpenBLAS_microarch" "NEHALEM" CACHE STRING "CPU microarchitecture to use")
+# -----------------------------------------------------------------------------
 
 if (CMAKE_SIZEOF_VOID_P MATCHES "8")
     set (arch "x86-64")
@@ -34,7 +36,7 @@ else ()
 endif ()
 
 get_filename_component (blasbase
-    "${CMAKE_CURRENT_LIST_DIR}/${platform}/${toolchain}/${microarch}/${arch}" ABSOLUTE
+    "${CMAKE_CURRENT_LIST_DIR}/${platform}/${toolchain}/${OpenBLAS_microarch}/${arch}" ABSOLUTE
 )
 set_target_properties (${pkgname} PROPERTIES
     IMPORTED_IMPLIB               "${blasbase}/lib/libopenblas.${libext}.a"

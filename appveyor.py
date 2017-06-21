@@ -10,7 +10,8 @@ Job = namedtuple("Job", "TOOLCHAIN TARGET ARCH INTERFACE64 BINARY")
 
 jobs = [
     Job(TOOLCHAIN='mingw', TARGET='NEHALEM', ARCH='x86-64', INTERFACE64='1', BINARY='64'),
-    Job(TOOLCHAIN='mingw', TARGET='NEHALEM', ARCH='x86',    INTERFACE64='0', BINARY='32')
+    Job(TOOLCHAIN='mingw', TARGET='NEHALEM', ARCH='x86',    INTERFACE64='0', BINARY='32'),
+    Job(TOOLCHAIN='mingw', TARGET='HASWELL', ARCH='x86-64', INTERFACE64='1', BINARY='64')
 ]
 
 with local.cwd(local.cwd / 'OpenBLAS'):
