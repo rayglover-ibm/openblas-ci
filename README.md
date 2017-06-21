@@ -11,21 +11,12 @@ Each release is split in to specific target platforms (Win/Mac/Linux/etc.), and 
 
 ## CMake support
 
-You can integrate these OpenBLAS builds in to your CMake project. Perhaps the most convenient approach is with [DownloadProject](https://github.com/Crascit/DownloadProject), e.g.:
+This repository contains `OpenBLASBootstrap.cmake` which provides functions for the discovery, downloading and setup of OpenBLAS in to your CMake project. For example, the following finds the latest available build for the current OS and makes the OpenBLAS target available to your project:
 
 ```cmake
-set (downloads_root "https://github.com/rayglover-ibm/openblas-ci/releases/download")
-set (version "v0.2.19")
-set (platform ${CMAKE_HOST_SYSTEM_NAME})
-
-download_project (
-    PROJ  OpenBLAS
-    URL   ${downloads_root}/${version}/${platform}.zip
-    UPDATE_DISCONNECTED 1
-)
-find_package (OpenBLAS REQUIRED
-    PATHS "${OpenBLAS_SOURCE_DIR}"
-)
+include ("OpenBLASBootstrap")
+OpenBLAS_find_archive (BUILD_URL url)
+OpenBLAS_init (BUILD_URL "${url}" PROJ OpenBLAS)
 ```
 
 Once the `OpenBLAS` target is available, you can use it in the typical way. For example, to link OpenBLAS to the target `myapp`:
@@ -36,6 +27,8 @@ target_include_directories (myapp PUBLIC
     $<TARGET_PROPERTY:OpenBLAS,INTERFACE_INCLUDE_DIRECTORIES>
 )
 ```
+
+To make sure you always use an up to date bootstrap, you could use CMake to download it at configuration time. A full working example of this is available [here](https://github.com/rayglover-ibm/sparse-solvers/blob/211bec856659b0ab68352e0eb27c71f8f8aff364/cmake/BlasUtils.cmake)
 
 ## Bazel support
 

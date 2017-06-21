@@ -11,43 +11,45 @@ set (github_api      "https://api.github.com/repos/rayglover-ibm/openblas-ci")
 # Gets the name of the latest OpenBLAS release available on Github
 #
 function (OpenBLAS_get_latest_release RELEASE_NAME)
-    set (rel_info_api_url "${github_api}/releases/latest")
-    set (release_info_file "${CMAKE_CURRENT_BINARY_DIR}/OpenBLAS_info.json")
+    set (endpoint "${github_api}/releases/latest")
+    set (result   "${CMAKE_CURRENT_BINARY_DIR}/OpenBLAS_latestrelease.json")
 
-    if (EXISTS "${release_info_file}")
-        file (REMOVE "${release_info_file}")
-    endif ()
-    
-    message (STATUS "Downloading release metadata from GitHub for OpenBLAS: ${rel_info_api_url}")
-    file (DOWNLOAD ${rel_info_api_url} ${release_info_file} STATUS stat)
-    
+    message (STATUS "Downloading release metadata from GitHub for OpenBLAS: ${endpoint}")
+    file (DOWNLOAD ${endpoint} ${result} STATUS stat)
+
     list (GET stat 0 stat_num)
     if (NOT stat_num EQUAL 0)
         message (ERROR "Unsuccessful downloading: ${stat}")
     endif ()
 
     # Find name of the latest release in json
-    file (STRINGS ${release_info_file} release_info)
+    file (STRINGS ${result} release_info)
     string (REGEX MATCH "\"name\": \"([^\"]*)\"" match "${release_info}")
     set (${RELEASE_NAME} "${CMAKE_MATCH_1}" PARENT_SCOPE)
 endfunction ()
 
 #
-# Finds exact URL to download OpenBLAS build basing on 
-# provided parameters.
+# Finds exact URL to download OpenBLAS build basing on
+# provided parameters. By default will return the latest
+# build available for ${CMAKE_SYSTEM_NAME}
 #
 # Arguments:
 #   BUILD_URL    <var_to_save_url>
-#   RELEASE_NAME <release_name|LATEST>
+#   RELEASE_NAME <release_name>         (optional)
+#   OS           <windows/linux/darwin> (optional)
 #
 function (OpenBLAS_find_archive)
     set (oneValueArgs BUILD_URL RELEASE_NAME OS)
     cmake_parse_arguments (args "" "${oneValueArgs}" "" ${ARGN})
 
-    if (args_RELEASE_NAME STREQUAL LATEST)
+    if (NOT args_RELEASE_NAME)
         OpenBLAS_get_latest_release (relname)
     else ()
         set (relname ${args_RELEASE_NAME})
+    endif ()
+
+    if (NOT args_OS)
+        set (args_OS ${CMAKE_SYSTEM_NAME})
     endif ()
 
     message (STATUS "Selected OpenBLAS release ${relname}")
