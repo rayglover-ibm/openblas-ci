@@ -65,7 +65,7 @@ endfunction ()
 #   PROJ      <name of the project to create>
 #
 function (OpenBLAS_init)
-    set (oneValueArgs BUILD_URL PROJ)
+    set (oneValueArgs BUILD_URL)
     cmake_parse_arguments (args "" "${oneValueArgs}" "" ${ARGN})
 
     # retrieve DownloadProject
@@ -80,7 +80,7 @@ function (OpenBLAS_init)
 
     # use DownloadProject to initialize OpenBLAS
     include ("${dest}/DownloadProject.cmake")
-    download_project (PROJ "${args_PROJ}"
+    download_project (PROJ "OpenBLAS-dl"
         URL "${args_BUILD_URL}"  UPDATE_DISCONNECTED 1
     )
     find_package (OpenBLAS CONFIG REQUIRED
