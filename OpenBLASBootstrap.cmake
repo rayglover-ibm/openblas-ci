@@ -83,7 +83,7 @@ function (OpenBLAS_init)
     download_project (PROJ "OpenBLAS-dl"
         URL "${args_BUILD_URL}"  UPDATE_DISCONNECTED 1
     )
-    find_package (OpenBLAS CONFIG REQUIRED
-        PATHS "${OpenBLAS_SOURCE_DIR}"
+    find_package ("OpenBLAS-dl" CONFIG REQUIRED
+        PATHS "${OpenBLAS-dl_SOURCE_DIR}"
     )
 endfunction ()
