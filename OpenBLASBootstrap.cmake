@@ -61,7 +61,8 @@ endfunction ()
 # and imports the OpenBLAS targets.
 #
 # Arguments:
-#   BUILD_URL <var_to_save_url>
+#   BUILD_URL   <var_to_save_url>
+#   COMPONENTS  <list of micro-architectures to import> (optional) 
 #
 function (OpenBLAS_init)
     set (oneValueArgs BUILD_URL)
