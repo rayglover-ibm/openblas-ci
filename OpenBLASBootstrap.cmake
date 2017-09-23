@@ -62,11 +62,11 @@ endfunction ()
 #
 # Arguments:
 #   BUILD_URL <var_to_save_url>
-#   PROJ      <name of the project to create>
 #
 function (OpenBLAS_init)
     set (oneValueArgs BUILD_URL)
-    cmake_parse_arguments (args "" "${oneValueArgs}" "" ${ARGN})
+    set (multiValueArgs COMPONENTS)
+    cmake_parse_arguments (args "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     # retrieve DownloadProject
     set (src "https://raw.githubusercontent.com/Crascit/DownloadProject/master")
@@ -83,7 +83,8 @@ function (OpenBLAS_init)
     download_project (PROJ "OpenBLAS-dl"
         URL "${args_BUILD_URL}"  UPDATE_DISCONNECTED 1
     )
-    find_package ("OpenBLAS" CONFIG REQUIRED
+    find_package (OpenBLAS CONFIG REQUIRED
+        COMPONENTS ${args_COMPONENTS}
         PATHS "${OpenBLAS-dl_SOURCE_DIR}"
     )
 endfunction ()
