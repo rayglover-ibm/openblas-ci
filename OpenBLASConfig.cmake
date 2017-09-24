@@ -6,10 +6,12 @@ set ("OpenBLAS_microarch" "NEHALEM" CACHE STRING "CPU microarchitecture to use")
 
 set_property (GLOBAL PROPERTY OpenBLAS_ld "${CMAKE_CURRENT_LIST_DIR}")
 
-function (OpenBLAS_import)
-    set (oneValueArgs MICRO_ARCH)
-    cmake_parse_arguments (args "" "${oneValueArgs}" "" ${ARGN})
+define_property (TARGET PROPERTY MICROARCH
+    BRIEF_DOCS "The microarchitecture this target is optimized for"
+    FULL_DOCS  "The microarchitecture this target is optimized for"
+)
 
+function (OpenBLAS_import MICROARCH)
     if (CMAKE_SIZEOF_VOID_P MATCHES "8")
         set (arch "x86-64")
     else ()
@@ -40,16 +42,17 @@ function (OpenBLAS_import)
 
     get_property (ld GLOBAL PROPERTY OpenBLAS_ld)
     get_filename_component (blasbase
-        "${ld}/${platform}/${toolchain}/${args_MICRO_ARCH}/${arch}" ABSOLUTE
+        "${ld}/${platform}/${toolchain}/${microarch}/${arch}" ABSOLUTE
     )
     
-    set (tgt "OpenBLAS::${args_MICRO_ARCH}")
+    set (tgt "OpenBLAS::${microarch}")
     if (NOT TARGET ${tgt})
         message (STATUS
             "[OpenBLAS] Importing '${tgt}' from: ${blasbase}"
         )
         add_library ("${tgt}" SHARED IMPORTED GLOBAL)
         set_target_properties (${tgt} PROPERTIES
+            MICROARCH                     "${microarch}"
             IMPORTED_IMPLIB               "${blasbase}/lib/libopenblas.${libext}.a"
             IMPORTED_LOCATION             "${blasbase}/${libdir}/libopenblas.${libext}"
             INTERFACE_INCLUDE_DIRECTORIES "${blasbase}/include"
@@ -60,9 +63,9 @@ endfunction ()
 if (OpenBLAS_FIND_COMPONENTS)
     # create targets. Each component corresponds to a specific micro-architecture
     foreach (microarch ${OpenBLAS_FIND_COMPONENTS})
-        OpenBLAS_import (MICRO_ARCH "${microarch}")
+        OpenBLAS_import ("${microarch}")
     endforeach ()
 else ()
     # use the option OpenBLAS_microarch
-    OpenBLAS_import (MICRO_ARCH "${OpenBLAS_microarch}")
+    OpenBLAS_import ("${OpenBLAS_microarch}")
 endif ()
