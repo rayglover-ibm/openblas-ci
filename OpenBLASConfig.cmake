@@ -12,6 +12,8 @@ define_property (TARGET PROPERTY MICROARCH
 )
 
 function (OpenBLAS_import MICROARCH)
+    set (tgt "OpenBLAS::${microarch}")
+
     if (CMAKE_SIZEOF_VOID_P MATCHES "8")
         set (arch "x86-64")
     else ()
@@ -44,19 +46,23 @@ function (OpenBLAS_import MICROARCH)
     get_filename_component (blasbase
         "${ld}/${platform}/${toolchain}/${microarch}/${arch}" ABSOLUTE
     )
-    
-    set (tgt "OpenBLAS::${microarch}")
+
     if (NOT TARGET ${tgt})
-        message (STATUS
-            "[OpenBLAS] Importing '${tgt}' from: ${blasbase}"
-        )
-        add_library ("${tgt}" SHARED IMPORTED GLOBAL)
+        message (STATUS "[OpenBLAS] Importing '${tgt}' from: ${blasbase}")
+        add_library ("${tgt}" SHARED IMPORTED)
+
+        set (fqp "${ld}/libopenblas.${arch}-${microarch}.${libext}")
+        set (location "${blasbase}/${libdir}/libopenblas.${libext}")
         set_target_properties (${tgt} PROPERTIES
             MICROARCH                     "${microarch}"
             IMPORTED_IMPLIB               "${blasbase}/lib/libopenblas.${libext}.a"
-            IMPORTED_LOCATION             "${blasbase}/${libdir}/libopenblas.${libext}"
+            IMPORTED_LOCATION             "${fqp}"
             INTERFACE_INCLUDE_DIRECTORIES "${blasbase}/include"
         )
+        add_custom_target ("OpenBLAS-${microarch}-setup"
+            COMMAND ${CMAKE_COMMAND} -E create_symlink "${location}" "${fqp}"
+        )
+        add_dependencies (${tgt} "OpenBLAS-${microarch}-setup")
     endif ()
 endfunction ()
 
