@@ -1,7 +1,7 @@
 #
 # Utils for retrieving and OpenBLAS builds
 #
-cmake_minimum_required (VERSION 3.3)
+cmake_minimum_required (VERSION 3.2)
 include (CMakeParseArguments)
 
 set (github_releases "https://github.com/rayglover-ibm/openblas-ci/releases/download")
