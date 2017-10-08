@@ -12,11 +12,11 @@ set (github_api      "https://api.github.com/repos/rayglover-ibm/openblas-ci")
 # destination, or fail.
 #
 macro (download_or_fail addr dest_path)
-    file (DOWNLOAD ${addr} ${dest_path} STATUS dlstat)
+    file (DOWNLOAD ${addr} ${dest_path} STATUS dlstat LOG dllog)
     list (GET dlstat 0 dlstat_num)
     if (NOT dlstat_num EQUAL 0)
         list (GET dlstat 1 dlstat_err)
-        message (FATAL_ERROR "Unsuccessful downloading: ${dlstat_num} ${dlstat_err}")
+        message (FATAL_ERROR "Unsuccessful downloading: ${dlstat_num} ${dlstat_err}. Log:\n${dllog}")
     endif ()
 endmacro ()
 
