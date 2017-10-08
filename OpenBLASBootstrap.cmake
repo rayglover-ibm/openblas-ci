@@ -1,26 +1,34 @@
 #
 # Utils for retrieving and OpenBLAS builds
 #
-cmake_minimum_required (VERSION 3.2)
+cmake_minimum_required (VERSION 3.3)
 include (CMakeParseArguments)
 
 set (github_releases "https://github.com/rayglover-ibm/openblas-ci/releases/download")
 set (github_api      "https://api.github.com/repos/rayglover-ibm/openblas-ci")
 
 #
-# Gets the name of the latest OpenBLAS release available on Github
+# Download the contents of the given address to the given
+# destination, or fail.
+#
+macro (download_or_fail addr dest_path)
+    file (DOWNLOAD ${addr} ${dest_path} STATUS dlstat)
+    list (GET dlstat 0 dlstat_num)
+    if (NOT dlstat_num EQUAL 0)
+        list (GET dlstat 1 dlstat_err)
+        message (FATAL_ERROR "Unsuccessful downloading: ${dlstat_num} ${dlstat_err}")
+    endif ()
+endmacro ()
+
+#
+# Get the name of the latest OpenBLAS release available on Github
 #
 function (OpenBLAS_get_latest_release RELEASE_NAME)
     set (endpoint "${github_api}/releases/latest")
     set (result   "${CMAKE_CURRENT_BINARY_DIR}/OpenBLAS_latestrelease.json")
 
     message (STATUS "Downloading release metadata from GitHub for OpenBLAS: ${endpoint}")
-    file (DOWNLOAD ${endpoint} ${result} STATUS stat)
-
-    list (GET stat 0 stat_num)
-    if (NOT stat_num EQUAL 0)
-        message (ERROR "Unsuccessful downloading: ${stat}")
-    endif ()
+    download_or_fail (${endpoint} ${result})
 
     # Find name of the latest release in json
     file (STRINGS ${result} release_info)
@@ -76,7 +84,7 @@ function (OpenBLAS_init)
     foreach (file
         "DownloadProject.cmake"
         "DownloadProject.CMakeLists.cmake.in")
-        file (DOWNLOAD "${src}/${file}" "${dest}/${file}" STATUS "retrieving ${file}")
+        download_or_fail ("${src}/${file}" "${dest}/${file}")
     endforeach ()
 
     # use DownloadProject to initialize OpenBLAS
