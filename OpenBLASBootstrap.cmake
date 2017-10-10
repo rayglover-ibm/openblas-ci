@@ -4,6 +4,10 @@
 cmake_minimum_required (VERSION 3.2)
 include (CMakeParseArguments)
 
+# options ---------------------------------------------------------------------
+set ("OpenBLAS_github_authtoken" "" CACHE STRING "A github auth token to use when downloading files")
+# -----------------------------------------------------------------------------
+
 set (github_releases "https://github.com/rayglover-ibm/openblas-ci/releases/download")
 set (github_api      "https://api.github.com/repos/rayglover-ibm/openblas-ci")
 
@@ -12,7 +16,10 @@ set (github_api      "https://api.github.com/repos/rayglover-ibm/openblas-ci")
 # destination, or fail.
 #
 macro (download_or_fail addr dest_path)
-    file (DOWNLOAD ${addr} ${dest_path} STATUS dlstat LOG dllog SHOW_PROGRESS)
+    file (DOWNLOAD ${addr} ${dest_path}
+        STATUS dlstat LOG dllog SHOW_PROGRESS
+        HTTPHEADER "Authorization:token ${OpenBLAS_github_authtoken}"
+    )
     list (GET dlstat 0 dlstat_num)
     if (NOT dlstat_num EQUAL 0)
         list (GET dlstat 1 dlstat_err)
