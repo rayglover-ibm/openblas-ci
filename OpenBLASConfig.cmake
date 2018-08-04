@@ -11,6 +11,11 @@ define_property (TARGET PROPERTY MICROARCH
     FULL_DOCS  "The microarchitecture this target is optimized for"
 )
 
+define_property (TARGET PROPERTY UNIQUE_NAME
+    BRIEF_DOCS "The name which uniquely identifies this target"
+    FULL_DOCS  "The name which uniquely identifies this target. Can be used as a file name."
+)
+
 function (OpenBLAS_import MICROARCH)
     set (tgt "OpenBLAS::${microarch}")
 
@@ -51,23 +56,13 @@ function (OpenBLAS_import MICROARCH)
         message (STATUS "[OpenBLAS] Importing '${tgt}' from: ${blasbase}")
         add_library ("${tgt}" SHARED IMPORTED)
 
-        # create a fully-qualified symlink from the list-dir the to
-        # the dynamic library being imported
-        set (location "${blasbase}/${libdir}/libopenblas.${libext}")
-        set (fqp "${ld}/libopenblas.${arch}-${microarch}.${libext}")
-
-        add_custom_target ("OpenBLAS-${microarch}-setup"
-            COMMAND ${CMAKE_COMMAND} -E create_symlink "${location}" "${fqp}"
-        )
-
         set_target_properties (${tgt} PROPERTIES
             MICROARCH                     "${microarch}"
+            UNIQUE_NAME                   "libopenblas.${platform}-${arch}-${microarch}.${libext}"
+            IMPORTED_LOCATION             "${blasbase}/${libdir}/libopenblas.${libext}"
             IMPORTED_IMPLIB               "${blasbase}/lib/libopenblas.${libext}.a"
-            IMPORTED_LOCATION             "${fqp}"
             INTERFACE_INCLUDE_DIRECTORIES "${blasbase}/include"
         )
-        
-        add_dependencies (${tgt} "OpenBLAS-${microarch}-setup")
     endif ()
 endfunction ()
 
