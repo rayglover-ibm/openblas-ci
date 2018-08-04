@@ -1,6 +1,6 @@
 environment:
-  API_KEY:
-    secure: G6Uxcu68rmW9z3Z9xU5j5N7ZtxFFR7KazDGGLf4BNbrrOvvn/LNFOCtGWWjyh4k9
+  GITHUB_TOKEN:
+    secure: QNdhHG6mv4mmQO6Yir47aiMSSwpMVM323mxpFECE8r7abHxFUN8xzIggg+PumazW
 
 branches:
   except:
@@ -38,6 +38,6 @@ deploy:
 after_deploy:
   - ps: |
       cd test
-      cmake -DOpenBLAS_github_authtoken=$Env:API_KEY .
+      cmake -DOpenBLAS_github_authtoken=$env:GITHUB_TOKEN .
       cmake --build . --target bootstrap-test
       ./bootstrap-test
