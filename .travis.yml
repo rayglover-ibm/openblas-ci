@@ -75,7 +75,8 @@ deploy:
 after_deploy:
   - |
     cd test
-    cmake -DOpenBLAS_github_authtoken=${GITHUB_TOKEN} .
+    echo "${GITHUB_TOKEN}"
+    cmake -DOpenBLAS_github_authtoken="${GITHUB_TOKEN}" .
     cmake --build . --target bootstrap-test
     ./bootstrap-test
   
