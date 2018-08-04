@@ -75,7 +75,7 @@ deploy:
 after_deploy:
   - |
     cd test
-    echo "${GITHUB_TOKEN}"
+    curl -i -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/rayglover-ibm/openblas-ci/releases/latest
     cmake -DOpenBLAS_github_authtoken="${GITHUB_TOKEN}" .
     cmake --build . --target bootstrap-test
     ./bootstrap-test
