@@ -96,7 +96,7 @@ function (OpenBLAS_init)
     # use DownloadProject to initialize OpenBLAS
     include ("${dest}/DownloadProject.cmake")
     download_project (PROJ "OpenBLAS-dl"
-        URL "${args_BUILD_URL}"  UPDATE_DISCONNECTED 1
+        URL "${args_BUILD_URL}" UPDATE_COMMAND ""
     )
     find_package (OpenBLAS CONFIG REQUIRED
         COMPONENTS ${args_COMPONENTS}
