@@ -1,10 +1,14 @@
+environment:
+  GITHUB_TOKEN:
+    secure: QNdhHG6mv4mmQO6Yir47aiMSSwpMVM323mxpFECE8r7abHxFUN8xzIggg+PumazW
+
 branches:
   except:
     - /^v?([0-9.]+)+[^.]\+sha\.[0-9a-f]{5,40}$/
 
 install:
 - git submodule update --init
-- pip install --user --upgrade pip
+- python -m pip install --user --upgrade pip
 - pip install --user plumbum
 
 build_script:
@@ -29,4 +33,11 @@ deploy:
   force_update: true
   auth_token:
     branch: master
-    secure: "31lCn0ra+kS6jDupOSkXxiGpzZ1slUrJ2IUiyBuwzBkJ1aX9GdpEu3ycmdyCRJ09"
+    secure: QNdhHG6mv4mmQO6Yir47aiMSSwpMVM323mxpFECE8r7abHxFUN8xzIggg+PumazW
+
+after_deploy:
+  - ps: |
+      cd test
+      cmake -G "Visual Studio 14 2015 Win64" -DOpenBLAS_github_authtoken="$env:GITHUB_TOKEN" .
+      cmake --build . --target bootstrap-test
+      ./Debug/bootstrap-test.exe

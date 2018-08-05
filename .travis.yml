@@ -71,3 +71,12 @@ deploy:
     on:
       tags: true
       condition: $TRAVIS_OS_NAME = "osx"
+
+after_deploy:
+  - |
+    sleep 10
+    cd test
+    cmake -DOpenBLAS_github_authtoken="${GITHUB_TOKEN}" .
+    cmake --build . --target bootstrap-test
+    ./bootstrap-test
+  
