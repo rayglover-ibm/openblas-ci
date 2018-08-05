@@ -15,3 +15,11 @@ target_link_libraries (bootstrap-test OpenBLAS::NEHALEM)
 target_include_directories (bootstrap-test
     PUBLIC "$<TARGET_PROPERTY:OpenBLAS::NEHALEM,INTERFACE_INCLUDE_DIRECTORIES>"
 )
+
+if (WIN32)
+    # (windows) copy dlls to the target directory
+    add_custom_command (TARGET bootstrap-test POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "$<TARGET_FILE:OpenBLAS::NEHALEM>" "$<TARGET_FILE_DIR:bootstrap-test>"
+    )
+endif ()
