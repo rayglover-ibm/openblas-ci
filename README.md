@@ -11,20 +11,20 @@ Each release is split in to specific target platforms (Win/Mac/Linux/etc.), and 
 
 ## CMake support
 
-This repository contains `OpenBLASBootstrap.cmake` which provides functions for the discovery, downloading and setup of OpenBLAS in to your CMake project. For example, the following finds the latest available release for the current OS and makes the `OpenBLAS` target available to your project:
+This repository contains `OpenBLASBootstrap.cmake` which provides functions for the discovery, downloading and setup of OpenBLAS in to your CMake project. For example, the following finds the latest available release for the current OS and imports targets corresponding to the requested microarchitecture, Haswell:
 
 ```cmake
 include ("OpenBLASBootstrap")
 OpenBLAS_find_archive (BUILD_URL url)
-OpenBLAS_init (BUILD_URL "${url}" PROJ OpenBLAS)
+OpenBLAS_init (BUILD_URL "${url}" COMPONENTS HASWELL)
 ```
 
 Once the `OpenBLAS` target is available, you can use it in the typical way. For example, to link OpenBLAS to the target `myapp`:
 
 ```cmake
-target_link_libraries (myapp OpenBLAS)
-target_include_directories (myapp PUBLIC
-    $<TARGET_PROPERTY:OpenBLAS,INTERFACE_INCLUDE_DIRECTORIES>
+target_link_libraries (myapp OpenBLAS::HASWELL)
+target_include_directories (myapp
+    PUBLIC "$<TARGET_PROPERTY:OpenBLAS::HASWELL,INTERFACE_INCLUDE_DIRECTORIES>"
 )
 ```
 
