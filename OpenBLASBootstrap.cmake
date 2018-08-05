@@ -16,9 +16,8 @@ set (github_api      "https://api.github.com/repos/rayglover-ibm/openblas-ci")
 # destination, or fail.
 #
 macro (download_or_fail addr dest_path)
-    file (DOWNLOAD ${addr} ${dest_path}
+    file (DOWNLOAD "${addr}?access_token=${OpenBLAS_github_authtoken}" "${dest_path}"
         STATUS dlstat LOG dllog SHOW_PROGRESS
-        HTTPHEADER "Authorization:token ${OpenBLAS_github_authtoken}"
     )
     list (GET dlstat 0 dlstat_num)
     if (NOT dlstat_num EQUAL 0)
@@ -97,7 +96,7 @@ function (OpenBLAS_init)
     # use DownloadProject to initialize OpenBLAS
     include ("${dest}/DownloadProject.cmake")
     download_project (PROJ "OpenBLAS-dl"
-        URL "${args_BUILD_URL}"  UPDATE_DISCONNECTED 1
+        URL "${args_BUILD_URL}" UPDATE_COMMAND ""
     )
     find_package (OpenBLAS CONFIG REQUIRED
         COMPONENTS ${args_COMPONENTS}
