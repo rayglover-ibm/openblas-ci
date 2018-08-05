@@ -33,7 +33,7 @@ deploy:
   force_update: true
   auth_token:
     branch: master
-    secure: "31lCn0ra+kS6jDupOSkXxiGpzZ1slUrJ2IUiyBuwzBkJ1aX9GdpEu3ycmdyCRJ09"
+    secure: QNdhHG6mv4mmQO6Yir47aiMSSwpMVM323mxpFECE8r7abHxFUN8xzIggg+PumazW
 
 after_deploy:
   - ps: |
